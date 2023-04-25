@@ -1,0 +1,70 @@
+#Задание1
+class Friends:
+    def __init__(self):
+        self.friendships = {}
+    def add_friendship(self, person1, person2):
+        """Add a friendship between two people"""
+        if person1 in self.friendships:
+            self.friendships[person1].add(person2)
+        else:
+            self.friendships[person1] = {person2}
+        if person2 in self.friendships:
+            self.friendships[person2].add(person1)
+        else:
+            self.friendships[person2] = {person1}
+    def get_friends(self, person):
+        """Return a set of friends for a given person"""
+        if person in self.friendships:
+            return self.friendships[person]
+        else:
+            return set()
+friends = Friends()
+friends.add_friendship("Света", "Ваня")
+friends.add_friendship("Ваня", "Маша")
+friends.add_friendship("Маша", "Света")
+print(friends.get_friends("Света")) 
+#Задание2
+class Student:
+    def __init__(self, name, group, courses):
+        self.name = name
+        self.group = group
+        self.courses = courses
+class Course:
+    def __init__(self, name):
+        self.name = name
+        self.students = []
+    def add_student(self, student):
+        self.students.append(student)
+    def get_average_score(self):
+        scores = []
+        for student in self.students:
+            scores.append(student.score)
+        return sum(scores)/len(scores)
+class Group:
+    def __init__(self, name, courses):
+        self.name = name
+        self.courses = courses
+    def add_course(self, course):
+        self.courses.append(course)
+    def get_average_score(self):
+        scores = []
+        for course in self.courses:
+            scores.append(course.get_average_score())
+        return sum(scores)/len(scores)
+class Registrar:
+    def __init__(self, students):
+        self.students = students
+    def generate_report(self):
+        report = {}
+        for student in self.students:
+            if student.group.name not in report:
+                report[student.group.name] = {}
+            for course in student.courses:
+                if course.name not in report[student.group.name]:
+                    report[student.group.name][course.name] = []
+                report[student.group.name][course.name].append(student.score)
+        for group_name, group_data in report.items():
+            for course_name, scores in group_data.items():
+                average_score = sum(scores)/len(scores)
+                report[group_name][course_name] = average_score
+        return report
